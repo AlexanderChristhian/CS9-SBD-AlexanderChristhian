@@ -38,23 +38,20 @@ const RegisterPage = () => {
     try {
       setIsLoading(true);
       
-      console.log("Registration request:", {
-        method: 'POST',
-        url: `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/user/register`,
-        params: {
-          email: formData.email,
-          password: formData.password,
-          name: formData.name,
-          balance: 0
-        }
-      });
+      // Fix the URL to avoid double slashes
+      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const registerUrl = baseUrl.endsWith('/') 
+        ? `${baseUrl}user/register` 
+        : `${baseUrl}/user/register`;
+        
+      console.log("Registration URL:", registerUrl);
       
       // Using POST with query parameters
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/user/register`,
-        null,  // null body
+        registerUrl,
+        null,
         {
-          params: {  // query parameters
+          params: {
             email: formData.email,
             password: formData.password,
             name: formData.name,

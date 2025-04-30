@@ -12,14 +12,14 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // CORS configuration
-const corsOptions = {
-  origin: ['https://mie-babi-rodotua.vercel.app', 'http://localhost:5173', 'http://localhost:3000'],
+app.use(cors({
+  origin: '*',  // Allow all origins (you can restrict this to specific domains later)
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
-};
+}));
 
-app.use(cors(corsOptions));
+// Add OPTIONS handling for preflight requests
+app.options('*', cors());
 
 // Middleware
 app.use(helmet()); // Add security headers

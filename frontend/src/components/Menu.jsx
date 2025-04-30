@@ -36,13 +36,15 @@ const Menu = () => {
       try {
         setLoading(true);
         
-        // Ensure there are no double slashes in the URL
+        // Fix the URL to avoid double slashes
         const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-        // Remove any trailing slash to avoid double slash
-        const apiUrl = baseUrl.endsWith('/') ? `${baseUrl}item` : `${baseUrl}/item`;
+        const itemsUrl = baseUrl.endsWith('/') 
+          ? `${baseUrl}item` 
+          : `${baseUrl}/item`;
+          
+        console.log("Fetching menu from:", itemsUrl);
         
-        console.log("Fetching from:", apiUrl);
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(itemsUrl);
         
         if (response.data.success) {
           // Transform the data to match our component's expected structure and categorize by store

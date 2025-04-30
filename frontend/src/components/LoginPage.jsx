@@ -33,26 +33,21 @@ const LoginPage = () => {
     try {
       setIsLoading(true);
       
-      // Try using POST with query parameters - this matches how your routes are defined
-      console.log("Login request:", {
-        method: 'POST',
-        url: `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/user/login`,
+      // Fix the URL to avoid double slashes
+      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const loginUrl = baseUrl.endsWith('/') 
+        ? `${baseUrl}user/login` 
+        : `${baseUrl}/user/login`;
+      
+      console.log("Login request URL:", loginUrl);
+      
+      // Use POST with query parameters
+      const response = await axios.get(loginUrl, {
         params: {
           email: formData.email,
           password: formData.password
         }
       });
-      
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/user/login`,
-        null,  // null body
-        {
-          params: {  // query parameters
-            email: formData.email,
-            password: formData.password
-          }
-        }
-      );
       
       console.log("Login response:", response.data);
       
