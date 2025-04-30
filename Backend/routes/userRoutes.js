@@ -1,16 +1,13 @@
 const express = require('express');
+const router = express.Router();
 const userController = require('../controllers/userController');
 
-module.exports = () => {
-    const router = express.Router();
+// Ensure these routes match what the frontend is calling
+router.post('/login', userController.loginUser);
+router.post('/register', userController.registerUser);
+router.get('/:email', userController.findUser);
+router.put('/', userController.updateUser);
+router.delete('/:id', userController.deleteUser);
+router.post('/topUp', userController.topUp);
 
-    router.post('/register', userController.registerUser);
-    router.post('/login', userController.loginUser);
-    router.get('/:email', userController.findUser);
-    router.put('/', userController.updateUser);
-    router.delete('/:id', userController.deleteUser);
-    router.post('/topUp', userController.topUp);
-    
-
-    return router;
-};
+module.exports = router;

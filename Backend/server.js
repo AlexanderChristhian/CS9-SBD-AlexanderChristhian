@@ -39,6 +39,8 @@ const userRoutes = require('./routes/userRoutes')();
 const itemRoutes = require('./routes/itemRoutes')();
 const transactionRoutes = require('./routes/transactionRoutes')();
 app.use('/store', storeRoutes);
+
+// Mount routes properly
 app.use('/user', userRoutes);
 app.use('/item', itemRoutes);
 app.use('/transaction', transactionRoutes);

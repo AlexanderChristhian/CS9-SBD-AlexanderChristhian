@@ -33,7 +33,7 @@ const LoginPage = () => {
     try {
       setIsLoading(true);
       
-      // Fix the URL to avoid double slashes
+      // Fix URL to avoid double slashes
       const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
       const loginUrl = baseUrl.endsWith('/') 
         ? `${baseUrl}user/login` 
@@ -41,8 +41,8 @@ const LoginPage = () => {
       
       console.log("Login request URL:", loginUrl);
       
-      // Use POST with query parameters
-      const response = await axios.get(loginUrl, {
+      // Make sure we're using POST as defined in the route, not GET
+      const response = await axios.post(loginUrl, null, {
         params: {
           email: formData.email,
           password: formData.password
