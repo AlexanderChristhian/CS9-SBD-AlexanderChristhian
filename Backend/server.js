@@ -13,25 +13,27 @@ const PORT = process.env.PORT || 5000;
 
 // Update CORS configuration to allow requests from your frontend
 const corsOptions = {
-  // Update this to match your frontend URL
   origin: [
     'https://mie-babi-rodotua.vercel.app',
-    'https://mie-babi-rodotua-frontend.vercel.app', 
     'http://localhost:5173', 
     'http://localhost:3000'
   ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
 };
 
+// Apply CORS middleware first
+app.use(cors(corsOptions));
+
 // Additional CORS handling for preflight requests
 app.options('*', cors(corsOptions));
 
-// Middleware
-app.use(cors(corsOptions));
-app.use(helmet()); // Add security headers
-app.use(xss()); // Sanitize inputs
+// Other middleware
+app.use(helmet({
+  crossOriginResourcePolicy: false
+}));
+app.use(xss());
 app.use(bodyParser.json());
 app.use(
   rateLimit({
