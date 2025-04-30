@@ -7,6 +7,17 @@ const rateLimit = require('express-rate-limit'); // Rate limiter
 const helmet = require('helmet'); // Security headers
 const xss = require('xss-clean'); // Prevent XSS attacks
 const { errorHandler } = require('./middlewares/errorHandler'); // Centralized error handler
+const morgan = require('morgan'); // Request logging
+const compression = require('compression'); // Response compression
+const cookieParser = require('cookie-parser'); // Cookie handling
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+  secure: true
+});
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -24,6 +35,9 @@ app.use(cors(corsOptions));
 // Middleware
 app.use(helmet()); // Add security headers
 app.use(xss()); // Sanitize inputs
+app.use(morgan('dev')); // Log requests
+app.use(compression()); // Compress responses
+app.use(cookieParser()); // Parse cookies
 app.use(bodyParser.json());
 app.use(
   rateLimit({
@@ -32,6 +46,11 @@ app.use(
     message: 'Too many requests, please try again later.',
   })
 );
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'OK', timestamp: new Date() });
+});
 
 // Import Routes
 const storeRoutes = require('./routes/storeRoutes')();
@@ -49,4 +68,5 @@ app.use(errorHandler);
 // Start Server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  console.log(`Health check available at: http://localhost:${PORT}/health`);
 });
