@@ -33,17 +33,17 @@ app.use(
   })
 );
 
-// Import Routes
-const storeRoutes = require('./routes/storeRoutes')();
-const userRoutes = require('./routes/userRoutes')();
-const itemRoutes = require('./routes/itemRoutes')();
-const transactionRoutes = require('./routes/transactionRoutes')();
-app.use('/store', storeRoutes);
+// Import your route files
+const userRoutes = require('./routes/userRoutes');
+const itemRoutes = require('./routes/itemRoutes');
+const transactionRoutes = require('./routes/transactionRoutes');
+const storeRoutes = require('./routes/storeRoutes');
 
 // Mount routes properly
 app.use('/user', userRoutes);
 app.use('/item', itemRoutes);
 app.use('/transaction', transactionRoutes);
+app.use('/store', storeRoutes); // Now using the router directly, not as a function
 
 // Centralized error handling middleware
 app.use(errorHandler);

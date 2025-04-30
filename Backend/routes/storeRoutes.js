@@ -1,14 +1,12 @@
 const express = require('express');
+const router = express.Router();
 const storeController = require('../controllers/storeController');
 
-module.exports = () => {
-    const router = express.Router();
+// Change from function to direct export
+router.get('/getAll', storeController.getAllStores);
+router.post('/create', storeController.createStore);
+router.get('/:id', storeController.findId);
+router.put('/', storeController.updateStore);
+router.delete('/:id', storeController.deleteStore);
 
-    router.get('/getAll', storeController.getAllStores);
-    router.post('/create', storeController.createStore);
-    router.get('/:id', storeController.findId);
-    router.put('/', storeController.updateStore);
-    router.delete('/:id', storeController.deleteStore);
-
-    return router;
-};
+module.exports = router;

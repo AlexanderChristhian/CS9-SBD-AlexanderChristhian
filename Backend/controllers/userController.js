@@ -50,51 +50,36 @@ const registerUser = async (req, res, next) => {
 }
 
 const loginUser = async (req, res, next) => {
-  const { email, password } = req.query; // or req.body depending on your setup
-  
-  console.log("Login attempt:", { email, password: "****" });
-  
-  try {
-    // Log the query to find the user
-    console.log("Querying database for user with email:", email);
-    
-    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-    
-    console.log("Query result rows:", result.rows.length);
-    
-    if (result.rows.length === 0) {
-      console.log("No user found with email:", email);
-      return res.status(400).json({
-        success: false,
-        message: "Invalid email or password",
-        payload: null,
-      });
-    }
+    const { email, password } = req.query;
 
-    const user = result.rows[0];
-    console.log("User found:", { id: user.id, email: user.email });
-    
-    // If using bcrypt:
-    const isMatch = await bcrypt.compare(password, user.password);
-    console.log("Password match result:", isMatch);
-    
-    if (!isMatch) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid email or password",
-        payload: null,
-      });
-    }
+    try {
+        const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+        if (result.rows.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid email or password",
+                payload: null,
+            });
+        }
 
-    res.json({
-        success: true,
-        message: "Login successful",
-        payload: user,
-    });
-  } catch (error) {
-    console.error("Login error:", error);
-    next(error);
-  }
+        const user = result.rows[0];
+        const isMatch = await bcrypt.compare(password, user.password); // Correctly await bcrypt.compare
+        if (!isMatch) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid email or password",
+                payload: null,
+            });
+        }
+
+        res.json({
+            success: true,
+            message: "Login successful",
+            payload: user,
+        });
+    } catch (error) {
+        next(error);
+    }
 };
 
 const findUser = async (req, res, next) => {
