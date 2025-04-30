@@ -31,7 +31,7 @@ const Menu = () => {
     if (tabParam && (tabParam === 'mie_babi' || tabParam === 'nasi_campur')) {
       setActiveTab(tabParam);
     }
-    
+  
     const fetchMenuItems = async () => {
       try {
         setLoading(true);
