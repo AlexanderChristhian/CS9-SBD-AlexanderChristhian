@@ -44,34 +44,84 @@ const Menu = () => {
           
         console.log("Fetching menu from:", itemsUrl);
         
-        // Add error handling and potentially a retry mechanism
-        try {
-          const response = await axios.get(itemsUrl);
+        // Add a timeout to the request to avoid hanging indefinitely
+        const response = await axios.get(itemsUrl, {
+          timeout: 10000, // 10 seconds timeout
+        }).catch(error => {
+          console.error("Axios error details:", {
+            message: error.message,
+            code: error.code,
+            status: error.response?.status,
+            statusText: error.response?.statusText,
+            data: error.response?.data
+          });
           
-          if (response.data.success) {
-            // Transform the data to match our component's expected structure
-            const items = response.data.payload.map(item => ({
-              id: item.id,
-              name: item.name.toUpperCase().replace(/_/g, ' '), 
-              description: item.description || `Menu dengan cita rasa spesial`,
-              price: parseFloat(item.price),
-              image: item.image_url || `menu_${item.name.toLowerCase().replace(/\s+/g, '_')}.png`,
-              stock: item.stock,
-              store: item.store || (item.name.toLowerCase().includes('mie') ? 'mie_babi' : 'nasi_campur')
-            }));
-            
-            setMenuItems(items);
+          if (error.response?.status === 500) {
+            throw new Error(`Server error (500): The menu service is currently unavailable. Please try again later.`);
+          } else if (error.code === 'ECONNABORTED') {
+            throw new Error('Request timeout: Server took too long to respond.');
+          } else if (error.response) {
+            throw new Error(`HTTP error ${error.response.status}: ${error.response.statusText}`);
+          } else if (error.request) {
+            throw new Error('Network error: No response received from server.');
           } else {
-            throw new Error(response.data.message || 'Failed to fetch menu items');
+            throw error;
           }
-        } catch (fetchError) {
-          console.error('Initial fetch failed, retrying...', fetchError);
-          // You could implement a retry here if needed
-          throw fetchError;
+        });
+        
+        if (response.data.success) {
+          // Transform the data to match our component's expected structure
+          const items = response.data.payload.map(item => ({
+            id: item.id,
+            name: item.name.toUpperCase().replace(/_/g, ' '), 
+            description: item.description || `Menu dengan cita rasa spesial`,
+            price: parseFloat(item.price),
+            image: item.image_url || `menu_${item.name.toLowerCase().replace(/\s+/g, '_')}.png`,
+            stock: item.stock,
+            store: item.store || (item.name.toLowerCase().includes('mie') ? 'mie_babi' : 'nasi_campur')
+          }));
+          
+          setMenuItems(items);
+        } else {
+          throw new Error(response.data.message || 'Failed to fetch menu items');
         }
       } catch (err) {
         console.error('Error fetching menu items:', err);
-        setError('Gagal memuat menu. Silakan coba lagi nanti.');
+        
+        // Provide a more helpful error message based on the error
+        const errorMessage = err.message || 'Gagal memuat menu. Silakan coba lagi nanti.';
+        setError(errorMessage);
+        
+        // Show fallback menu items for demo purposes
+        setMenuItems([
+          {
+            id: 'fallback-1',
+            name: 'MIE BABI KLASIK',
+            description: 'Menu klasik mie babi dengan kuah kaldu gurih',
+            price: 35000,
+            image: 'https://via.placeholder.com/400x300?text=Mie+Babi+Klasik',
+            stock: 10,
+            store: 'mie_babi'
+          },
+          {
+            id: 'fallback-2',
+            name: 'MIE BABI SPESIAL',
+            description: 'Versi spesial dengan topping yang lebih banyak',
+            price: 45000,
+            image: 'https://via.placeholder.com/400x300?text=Mie+Babi+Spesial',
+            stock: 10,
+            store: 'mie_babi'
+          },
+          {
+            id: 'fallback-3',
+            name: 'NASI CAMPUR BABI',
+            description: 'Nasi putih dengan lauk daging babi dan sayuran',
+            price: 40000,
+            image: 'https://via.placeholder.com/400x300?text=Nasi+Campur+Babi',
+            stock: 10,
+            store: 'nasi_campur'
+          }
+        ]);
       } finally {
         setLoading(false);
       }
