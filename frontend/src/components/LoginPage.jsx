@@ -33,7 +33,13 @@ const LoginPage = () => {
     try {
       setIsLoading(true);
       
-      // Fix URL to avoid double slashes
+      // Debug the credential values
+      console.log("Attempting login with:", {
+        email: formData.email,
+        password: formData.password
+      });
+      
+      // Fix the URL and ensure we're using the correct HTTP method
       const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
       const loginUrl = baseUrl.endsWith('/') 
         ? `${baseUrl}user/login` 
@@ -41,7 +47,7 @@ const LoginPage = () => {
       
       console.log("Login request URL:", loginUrl);
       
-      // Make sure we're using POST as defined in the route, not GET
+      // Try POST since backend routes typically define login as POST
       const response = await axios.post(loginUrl, null, {
         params: {
           email: formData.email,
@@ -56,6 +62,9 @@ const LoginPage = () => {
         // Get the user data from the response
         const userData = response.data.payload;
         
+        // Debug the returned user
+        console.log("Login successful, user data:", userData);
+        
         // Store user data in auth context
         login(userData);
         
@@ -67,14 +76,15 @@ const LoginPage = () => {
       }
     } catch (error) {
       console.error('Login error:', error);
-      console.log('Error details:', {
-        message: error.message,
-        response: error.response ? {
+      
+      // Enhanced error logging for debugging
+      if (error.response) {
+        console.log('Error response:', {
           status: error.response.status,
-          data: error.response.data
-        } : 'No response',
-        request: error.request ? 'Request made but no response received' : 'No request made'
-      });
+          data: error.response.data,
+          headers: error.response.headers
+        });
+      }
       
       // Handle different types of errors
       if (error.response) {

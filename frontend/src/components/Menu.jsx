@@ -44,23 +44,30 @@ const Menu = () => {
           
         console.log("Fetching menu from:", itemsUrl);
         
-        const response = await axios.get(itemsUrl);
-        
-        if (response.data.success) {
-          // Transform the data to match our component's expected structure and categorize by store
-          const items = response.data.payload.map(item => ({
-            id: item.id,
-            name: item.name.toUpperCase().replace(/_/g, ' '), // Convert underscores to spaces
-            description: item.description || `Menu dengan cita rasa spesial`, // Fallback description
-            price: parseFloat(item.price),
-            image: item.image_url || `menu_${item.name.toLowerCase().replace(/\s+/g, '_')}.png`,
-            stock: item.stock,
-            store: item.store || (item.name.toLowerCase().includes('mie') ? 'mie_babi' : 'nasi_campur') // Fallback store categorization
-          }));
+        // Add error handling and potentially a retry mechanism
+        try {
+          const response = await axios.get(itemsUrl);
           
-          setMenuItems(items);
-        } else {
-          throw new Error(response.data.message || 'Failed to fetch menu items');
+          if (response.data.success) {
+            // Transform the data to match our component's expected structure
+            const items = response.data.payload.map(item => ({
+              id: item.id,
+              name: item.name.toUpperCase().replace(/_/g, ' '), 
+              description: item.description || `Menu dengan cita rasa spesial`,
+              price: parseFloat(item.price),
+              image: item.image_url || `menu_${item.name.toLowerCase().replace(/\s+/g, '_')}.png`,
+              stock: item.stock,
+              store: item.store || (item.name.toLowerCase().includes('mie') ? 'mie_babi' : 'nasi_campur')
+            }));
+            
+            setMenuItems(items);
+          } else {
+            throw new Error(response.data.message || 'Failed to fetch menu items');
+          }
+        } catch (fetchError) {
+          console.error('Initial fetch failed, retrying...', fetchError);
+          // You could implement a retry here if needed
+          throw fetchError;
         }
       } catch (err) {
         console.error('Error fetching menu items:', err);
