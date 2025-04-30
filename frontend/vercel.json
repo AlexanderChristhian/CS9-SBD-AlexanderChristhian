@@ -1,17 +1,14 @@
 {
   "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/home", "destination": "/index.html" },
+    { "source": "/menu", "destination": "/index.html" },
+    { "source": "/login", "destination": "/index.html" },
+    { "source": "/register", "destination": "/index.html" },
+    { "source": "/orders", "destination": "/index.html" },
+    { "source": "/profile", "destination": "/index.html" },
+    { "source": "/location", "destination": "/index.html" },
+    { "source": "/about", "destination": "/index.html" },
     { "source": "/(.*)", "destination": "/index.html" }
-  ],
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/home", "dest": "/index.html" },
-    { "src": "/menu", "dest": "/index.html" },
-    { "src": "/login", "dest": "/index.html" },
-    { "src": "/register", "dest": "/index.html" },
-    { "src": "/orders", "dest": "/index.html" },
-    { "src": "/profile", "dest": "/index.html" },
-    { "src": "/location", "dest": "/index.html" },
-    { "src": "/about", "dest": "/index.html" },
-    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
