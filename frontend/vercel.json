@@ -1,5 +1,17 @@
 {
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/home", "dest": "/index.html" },
+    { "src": "/menu", "dest": "/index.html" },
+    { "src": "/login", "dest": "/index.html" },
+    { "src": "/register", "dest": "/index.html" },
+    { "src": "/orders", "dest": "/index.html" },
+    { "src": "/profile", "dest": "/index.html" },
+    { "src": "/location", "dest": "/index.html" },
+    { "src": "/about", "dest": "/index.html" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
