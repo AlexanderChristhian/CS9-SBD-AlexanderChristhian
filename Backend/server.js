@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 5000;
 // Update CORS configuration to allow requests from your frontend
 const corsOptions = {
   // Update this to match your frontend URL
-  origin: ['https://os.netlabdte.com', 'http://localhost:5173', 'http://localhost:3000'],
+  origin: ['https://mie-babi-rodotua.vercel.app', 'http://localhost:5173', 'http://localhost:3000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
