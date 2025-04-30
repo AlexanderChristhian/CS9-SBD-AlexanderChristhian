@@ -31,22 +31,13 @@ const Menu = () => {
     if (tabParam && (tabParam === 'mie_babi' || tabParam === 'nasi_campur')) {
       setActiveTab(tabParam);
     }
-  
+    
     const fetchMenuItems = async () => {
       try {
         setLoading(true);
-        const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-        console.log("Fetching menu items from:", `${baseUrl}/item`);
         
         // Fetch items from the backend using the getItems function from itemController
-        const response = await axios.get(`${baseUrl}/item`, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          }
-        });
-        
-        console.log("API Response:", response);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/item`);
         
         if (response.data.success) {
           // Transform the data to match our component's expected structure and categorize by store
@@ -57,7 +48,7 @@ const Menu = () => {
             price: parseFloat(item.price),
             image: item.image_url || `menu_${item.name.toLowerCase().replace(/\s+/g, '_')}.png`,
             stock: item.stock,
-            store: item.store_id === 1 ? 'mie_babi' : 'nasi_campur' // Categorize by store_id
+            store: item.store || (item.name.toLowerCase().includes('mie') ? 'mie_babi' : 'nasi_campur') // Fallback store categorization
           }));
           
           setMenuItems(items);
@@ -344,7 +335,7 @@ const Menu = () => {
                 <p className="font-semibold text-amber-900 mt-1">{formatPrice(orderModal.item.price)}</p>
               </div>
             </div>
-            
+            w
             <div className="mb-6">
               <label htmlFor="quantity" className="block text-gray-700 font-bold text-lg mb-2">
                 Jumlah Pesanan
