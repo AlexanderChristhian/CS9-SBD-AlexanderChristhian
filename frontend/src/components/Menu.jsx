@@ -36,8 +36,13 @@ const Menu = () => {
       try {
         setLoading(true);
         
-        // Fetch items from the backend using the getItems function from itemController
-        const response = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/item`);
+        // Ensure there are no double slashes in the URL
+        const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+        // Remove any trailing slash to avoid double slash
+        const apiUrl = baseUrl.endsWith('/') ? `${baseUrl}item` : `${baseUrl}/item`;
+        
+        console.log("Fetching from:", apiUrl);
+        const response = await axios.get(apiUrl);
         
         if (response.data.success) {
           // Transform the data to match our component's expected structure and categorize by store

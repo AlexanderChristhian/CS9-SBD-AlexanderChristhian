@@ -11,17 +11,17 @@ const { errorHandler } = require('./middlewares/errorHandler'); // Centralized e
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Update CORS configuration to allow requests from your frontend
+// CORS configuration
 const corsOptions = {
-  // Update this to match your frontend URL
-  origin: ['https://os.netlabdte.com', 'http://localhost:5173', 'http://localhost:3000'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  origin: ['https://mie-babi-rodotua.vercel.app', 'http://localhost:5173', 'http://localhost:3000'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
 };
 
-// Middleware
 app.use(cors(corsOptions));
+
+// Middleware
 app.use(helmet()); // Add security headers
 app.use(xss()); // Sanitize inputs
 app.use(bodyParser.json());
