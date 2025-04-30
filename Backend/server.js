@@ -11,23 +11,23 @@ const { errorHandler } = require('./middlewares/errorHandler'); // Centralized e
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Update CORS configuration to allow requests from your frontend
-const corsOptions = {
-  origin: [
-    'https://mie-babi-rodotua.vercel.app',
-    'http://localhost:5173', 
-    'http://localhost:3000'
-  ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization']
-};
+// // Update CORS configuration to allow requests from your frontend
+// const corsOptions = {
+//   origin: [
+//     'https://mie-babi-rodotua.vercel.app',
+//     'http://localhost:5173', 
+//     'http://localhost:3000'
+//   ],
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//   credentials: true,
+//   allowedHeaders: ['Content-Type', 'Authorization']
+// };
 
-// Apply CORS middleware first
-app.use(cors(corsOptions));
+// // Apply CORS middleware first
+// app.use(cors(corsOptions));
 
-// Additional CORS handling for preflight requests
-app.options('*', cors(corsOptions));
+// // Additional CORS handling for preflight requests
+// app.options('*', cors(corsOptions));
 
 // Other middleware
 app.use(helmet({
